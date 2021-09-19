@@ -1,14 +1,16 @@
 function doPost(e) {
   if(fromAdjustmentBot(e)) {
     sendToSlack(e);
-  }else if(isInfratop(e)){
+    data = JSON.parse(e.getContentText('utf-8'));
+    sendToTestSlack(data);
+  }else if(is129Bot(e)){
     sendToTestSlack(e);
   };
 }
 
 function fromAdjustmentBot(e) {
-  var bot_name = "ayumuabe1434"
-  if(e.parameter.user_name === bot_name){
+  var send_user_name = "ayumuabe1434"
+  if(e.parameter.user_name === send_user_name){
     return true
   }else{
     return false
@@ -35,9 +37,10 @@ function sendToSlack(e) {
   UrlFetchApp.fetch(url, params);
 }
 
-function isInfratop(e) {
-  var infratop_team_domain = "infratop"
-  if(e.parameter.team_domain === infratop_team_domain){
+function is129Bot(e) {
+  var infratop_team_domain = "infratop";
+  var infratop_bot_name = "遅刻欠勤シフト変更申請";
+  if(e.parameter.team_domain === infratop_team_domain && bot_name in e.parameter){
     return true
   }else{
     return false
