@@ -28,9 +28,9 @@ function immediateReaction(json) {
           ){
             var input_row = [[true, asar["date"], asar["timespan"][0], asar["timespan"][1]]];
             sh.getRange(i+1, 4, 1, 4).setValues(input_row);
-            sendToTestSlack("出勤可能です！");
-            // sendToSlack(json);
-            sendToDM("これはテストです。");
+            // sendToTestSlack("出勤可能です！");
+            sendToSlack(json);
+            // sendToDM("これはテストです。");
             return
           };
         };
@@ -94,7 +94,7 @@ function sendToTestSlack(e) {
   // 変更するのは、この部分だけ!
   var payload = {
     "token" : "~~~~~~~~~~~~~~~~",
-    "channel" : "#開発",
+    "channel" : "C02F8V5K8P3",
     "text" : e
   };
   
@@ -107,23 +107,15 @@ function sendToTestSlack(e) {
   UrlFetchApp.fetch(url, params);
 };
 
-function testReaction(json) {
-  var send_user_id = "U02EWAXB13L"
-  if(json.event.user === send_user_id){
-    return true
-  }else{
-    return false
-  }
-};
 
 function sendToSlack(json) {
   var url = "https://slack.com/api/chat.postMessage";
   
   // 変更するのは、この部分だけ!
   var payload = {
-    "token" : PropertiesService.getScriptProperties().getProperty("129SlackUserToken"),
-    "channel" : "#開発",
-    "text" : "出勤可能です！",
+    "token" : PropertiesService.getScriptProperties().getProperty("infratopSlackUserToken"),
+    "channel" : "C01SQD0DEGP",
+    "text" : "出勤可能です",
     "thread_ts" : json.event.ts
   };
   

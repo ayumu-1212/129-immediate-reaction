@@ -92,3 +92,13 @@ function getChannelID_(member_id) {
   
   return obj.channel.id;
 }
+
+
+function testReaction(json) {
+  var send_user_id = "U02EWAXB13L"
+  if(json.event.user === send_user_id){
+    return true
+  }else{
+    return false
+  }
+};
