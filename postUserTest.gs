@@ -101,7 +101,7 @@ function sendToSlack(json) {
     "token" : PropertiesService.getScriptProperties().getProperty("129SlackUserToken"),
     "channel" : "#開発",
     "text" : "出勤可能です！",
-    "thread_ts" : json.parameter.timestamp
+    "thread_ts" : json.event.ts
   };
   
   var params = {
