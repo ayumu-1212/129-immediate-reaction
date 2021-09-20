@@ -51,3 +51,44 @@ function getDataFromSS() {
   sh.getRange(2, 4, 1, 4).setValues(input_row);
 
 };
+
+function sendToDM() {
+  const message = "これはテストメッセージです";
+  const member_id = "UL6MTNLG6" // infratopアカウント
+  // const member_id = "U02F8V5LT7B" // testアカウント
+  const channel_id = getChannelID_(member_id);
+  Logger.log(channel_id);
+  const message_options = {
+    "method" : "post",
+    "payload" : {
+      "token": PropertiesService.getScriptProperties().getProperty("infratopSlackUserToken"),
+      "channel": channel_id,
+      "text": message
+    }
+  };
+  
+  //必要scope = chat:write
+  const message_url = 'https://slack.com/api/chat.postMessage';
+  UrlFetchApp.fetch(message_url, message_options);
+  
+}
+
+function getChannelID_(member_id) {
+ 
+  const options = {
+    "method" : "post",
+    "payload" : {
+      "token": PropertiesService.getScriptProperties().getProperty("infratopSlackUserToken"),
+      "users": member_id
+    }
+  }
+  
+  //必要scope = im:write
+  const url = 'https://slack.com/api/conversations.open';
+  const response = UrlFetchApp.fetch(url, options);
+  
+  const obj = JSON.parse(response);
+  console.log(obj);
+  
+  return obj.channel.id;
+}

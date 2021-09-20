@@ -29,7 +29,8 @@ function immediateReaction(json) {
             var input_row = [[true, asar["date"], asar["timespan"][0], asar["timespan"][1]]];
             sh.getRange(i+1, 4, 1, 4).setValues(input_row);
             sendToTestSlack("出勤可能です！");
-            sendToSlack(json);
+            // sendToSlack(json);
+            sendToDM("これはテストです。");
             return
           };
         };
@@ -56,14 +57,36 @@ function getDataFromJson(json) {
 function is129Bot(json) {
   var infratop_team_id = "T0729A1QD";
   var channel_129_id = "C01SQD0DEGP";
-  // ボットの特定はまだ、データ取れてから。
-  // if(json.team_id === infratop_team_id && json.event.channel === channel_129_id){
-  if(json.event.user === "U02EWAXB13L"){
+  if(json.team_id === infratop_team_id && json.event.channel === channel_129_id){
+    return true
+  }else if(json.event.user === "U02EWAXB13L"){
     return true
   }else{
     return false
   }
 };
+
+function sendToDM(message) {
+  const message_url = 'https://slack.com/api/chat.postMessage';
+
+  // const member_id = "UL6MTNLG6" // infratopアカウント
+  // const member_id = "U02F8V5LT7B" // testアカウント
+
+  const channel_id = "DL43QCXEG";
+
+  const message_options = {
+    "method" : "post",
+    "payload" : {
+      "token": PropertiesService.getScriptProperties().getProperty("infratopSlackUserToken"),
+      "channel": channel_id,
+      "text": message
+    }
+  };
+  
+  //必要scope = chat:write
+  UrlFetchApp.fetch(message_url, message_options);
+  
+}
 
 function sendToTestSlack(e) {
   var url = "https://slack.com/api/chat.postMessage";
