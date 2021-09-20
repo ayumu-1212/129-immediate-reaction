@@ -4,21 +4,20 @@ function doPost(e) {
 };
 
 function immediateReaction(json) {
-  Logger.log(json);
   if(is129Bot(json)){
-    var ss = SpreadsheetApp.openById('1erELxKMf2_Tp0dsRwUtMmx4BNywPL6NhOX1Ddb_x4Bg');
-    var sh = ss.getActiveSheet();
-    const shLastRow = sh.getRange(1, 1).getNextDataCell(SpreadsheetApp.Direction.DOWN).getRow();
-    var asar = sh.getRange(1,1, shLastRow, 7).getValues();
+    var asar = getDataFromJson(json);
     // ランクが適性の場合取得
     if(asar["rank"] === "S0" || asar["rank"] === "S1" || asar["rank"] === "S2"){
-      var ss_values = getDataFromSS();
+      var ss = SpreadsheetApp.openById('1erELxKMf2_Tp0dsRwUtMmx4BNywPL6NhOX1Ddb_x4Bg');
+      var sh = ss.getActiveSheet();
+      const shLastRow = sh.getRange(1, 1).getNextDataCell(SpreadsheetApp.Direction.DOWN).getRow();
+      var ss_values = sh.getRange(1,1, shLastRow, 7).getValues();
       for(let i = 1, this_row; i <= (shLastRow-1); i++){
         this_row = ss_values[i];
         if(
           this_row[0].getMonth() === asar["date"].getMonth() &&
           this_row[0].getDate() === asar["date"].getDate() &&
-          this_row[3]
+          this_row[3] === ""
         ){
           if(
             this_row[1]-2 <= asar["timespan"][0] && 
@@ -27,9 +26,10 @@ function immediateReaction(json) {
             asar["timespan"][1] <= this_row[2]+2 && 
             asar["timespan"][1] - asar["timespan"][0] >= 3
           ){
-            var input_row = [true, asar["date"], asar["timespan"][0], asar["timespan"][1]];
-            sh.getRange(i, 4, 1, 4).setValues(input_row);
+            var input_row = [[true, asar["date"], asar["timespan"][0], asar["timespan"][1]]];
+            sh.getRange(i+1, 4, 1, 4).setValues(input_row);
             sendToTestSlack("出勤可能です！");
+            sendToSlack(json);
             return
           };
         };
@@ -93,7 +93,7 @@ function testReaction(json) {
   }
 };
 
-function sendToSlack(e) {
+function sendToSlack(json) {
   var url = "https://slack.com/api/chat.postMessage";
   
   // 変更するのは、この部分だけ!
@@ -101,7 +101,7 @@ function sendToSlack(e) {
     "token" : PropertiesService.getScriptProperties().getProperty("129SlackUserToken"),
     "channel" : "#開発",
     "text" : "出勤可能です！",
-    "thread_ts" : e.parameter.timestamp
+    "thread_ts" : json.parameter.timestamp
   };
   
   var params = {

@@ -46,4 +46,8 @@ function getDataFromSS() {
   if(first_row[3]){
     Logger.log(first_row[0].getDate());
   };
+  var input_row = [[true, first_row[0], first_row[1], first_row[2]]];
+  Logger.log(input_row);
+  sh.getRange(2, 4, 1, 4).setValues(input_row);
+
 };
