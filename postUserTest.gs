@@ -7,12 +7,12 @@ function immediateReaction(json) {
   if(is129Bot(json)){
     var asar = getDataFromJson(json);
     // ランクが適性の場合取得
-    if(asar["rank"] === "S0" || asar["rank"] === "S1" || asar["rank"] === "S2"){
+    if(asar["rank"] === "S0" || asar["rank"] === "S1" || asar["rank"] === "S2" || asar["rank"] === "S3"){
       var ss = SpreadsheetApp.openById('1erELxKMf2_Tp0dsRwUtMmx4BNywPL6NhOX1Ddb_x4Bg');
       var sh = ss.getActiveSheet();
       const shLastRow = sh.getRange(1, 1).getNextDataCell(SpreadsheetApp.Direction.DOWN).getRow();
       var ss_values = sh.getRange(1,1, shLastRow, 7).getValues();
-      for(let i = 1, this_row; i <= (shLastRow-1); i++){
+      for(let i = 1, this_row; i < shLastRow; i++){
         this_row = ss_values[i];
         if(
           this_row[0].getMonth() === asar["date"].getMonth() &&
