@@ -1,22 +1,17 @@
 function doPost(e) {
-  var para = sendToSlack(e);
-  sendToSlack(para, para['ts']);
-  sendToSlack(para['ts']);
+  sendToSlack(e);
 }
 
-function sendToSlack(message, thread_ts=null) {
+function sendToSlack(params) {
   var url = "https://slack.com/api/chat.postMessage";
   
   // 変更するのは、この部分だけ!
   var payload = {
     "token" : "~~~~~~~~~~~~~~~~",
     "channel" : "#開発",
-    "text" : message
+    "text" : "出勤可能です！",
+    "thread_ts" : params.parameter.timestamp
   };
-
-  if(thread_ts){
-    payload["thread_ts"] = thread_ts;
-  }
   
   var params = {
     "method" : "post",
@@ -24,7 +19,6 @@ function sendToSlack(message, thread_ts=null) {
   };
   
   // Slackに投稿する
-  var response = UrlFetchApp.fetch(url, params);
-  return JSON.parse(response.getContentText('utf-8'));
+  UrlFetchApp.fetch(url, params);
 }
 
